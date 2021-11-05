@@ -73,7 +73,7 @@ class Webhook(APIView):
 
             url = "https://rest.gohighlevel.com/v1/contacts/" + str(id)
             final_response = requests.request("PUT", url, headers=headers, data=payload).json()
-            print("\n\n\n** POST RESPONSE **\n\n",final_response)
+            print("\n\n\n** PUT RESPONSE **\n\n",final_response)
         return Response(data="sucess")
 
     def get(self,request):

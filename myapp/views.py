@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 import json
-import pdb
 
 # Create your views here.
 class Webhook(APIView):
@@ -23,7 +22,6 @@ class Webhook(APIView):
             con_name[cust_fields.get("name")] = cust_fields.get("id")
 
         print("\n\n\n CCUSTOM FIELDS DICT:",con_name)
-        pdb.set_trace()
         email = request.data.get("contact").get("email")
         phone = request.data.get("contact").get("phone")
         

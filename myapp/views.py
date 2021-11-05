@@ -21,7 +21,7 @@ class Webhook(APIView):
         # print(cust_fields)
             con_name[cust_fields.get("name")] = cust_fields.get("id")
 
-
+        print("\n\n\n CCUSTOM FIELDS DICT:",con_name)
         email = request.get("contact").get("email")
         phone = request.get("contact").get("phone")
         url = "https://rest.gohighlevel.com/v1/contacts/lookup?email=" + str(email)
@@ -35,9 +35,8 @@ class Webhook(APIView):
 
         if response.get("contacts") == None :
             cust_field = {}
-            cust_field[con_name.get("company_name")] = request.get("contacts").get("company_name")
             cust_field[con_name.get("public_identifier")] = request.get("contacts").get("public_identifier")
-            cust_field[con_name.get("message")] = request.get("messenger").get("message")
+            cust_field[con_name.get("Message")] = request.get("messenger").get("message")
             cust_field[con_name.get("profile_link")] = request.get("contacts").get("profile_link")
             payload = json.dumps({
                     "email": request.get("contacts").get("email"),
@@ -45,6 +44,7 @@ class Webhook(APIView):
                     "firstName": request.get("contacts").get("first_name"),
                     "lastName": request.get("contacts").get("last_name"),
                     "address1": request.get("contacts").get("address"),
+                    "companyName": request.get("contacts").get("company_name"),
                     "customField": cust_field
                     })
 
@@ -58,14 +58,14 @@ class Webhook(APIView):
         else:
             id = response.get("contacts")[0].get("id")
             cust_field = {}
-            cust_field[con_name.get("company_name")] = request.get("contacts").get("company_name")
             cust_field[con_name.get("public_identifier")] = request.get("contacts").get("public_identifier")
-            cust_field[con_name.get("message")] = request.get("messenger").get("message")
+            cust_field[con_name.get("Message")] = request.get("messenger").get("message")
             cust_field[con_name.get("profile_link")] = request.get("contacts").get("profile_link")
             payload = json.dumps({
                     "firstName": request.get("contacts").get("first_name"),
                     "lastName": request.get("contacts").get("last_name"),
                     "address1": request.get("contacts").get("address"),
+                    "companyName": request.get("contacts").get("company_name"),
                     "customField": cust_field
                     })
             print("\n\n PUT PPAYLOAD RESPONSE", payload)

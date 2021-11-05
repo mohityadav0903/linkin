@@ -16,6 +16,7 @@ class Webhook(APIView):
         con_name={}
         url = "https://rest.gohighlevel.com/v1/custom-fields/"
         response = requests.request("GET", url, headers=headers).json()
+        print("\n\n CUSTOM FIELD RESPONSE", response)
         for cust_fields in response.get("customFields"):
         # print(cust_fields)
             con_name[cust_fields.get("name")] = cust_fields.get("id")
@@ -25,10 +26,13 @@ class Webhook(APIView):
         phone = request.get("contact").get("phone")
         url = "https://rest.gohighlevel.com/v1/contacts/lookup?email=" + str(email)
         response = requests.request("GET", url, headers=headers).json()
+        print("\n\n EMAIL LOOKUP RESPONSE", response)
+
         if response.get("contacts") == None :
             url = "https://rest.gohighlevel.com/v1/contacts/lookup?phone=" + str(phone)
             response = requests.request("GET", url, headers=headers).json()
-        
+            print("\n\n PHONE LOOKUP RESPONSE", response)
+
         if response.get("contacts") == None :
             cust_field = {}
             cust_field[con_name.get("company_name")] = request.get("contacts").get("company_name")
@@ -43,6 +47,9 @@ class Webhook(APIView):
                     "address1": request.get("contacts").get("address"),
                     "customField": cust_field
                     })
+
+            print("\n\n POST PAYLOAD", payload)
+
             url = "https://rest.gohighlevel.com/v1/contacts/"
             final_response = requests.request("POST", url, headers=headers, data=payload).json()
             print("\n\n\n** POST RESPONSE **\n\n",final_response)
@@ -61,6 +68,8 @@ class Webhook(APIView):
                     "address1": request.get("contacts").get("address"),
                     "customField": cust_field
                     })
+            print("\n\n PUT PPAYLOAD RESPONSE", payload)
+
             url = "https://rest.gohighlevel.com/v1/contacts/" + str(id)
             final_response = requests.request("PUT", url, headers=headers, data=payload).json()
             print("\n\n\n** POST RESPONSE **\n\n",final_response)

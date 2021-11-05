@@ -8,6 +8,7 @@ class Webhook(APIView):
     def post(self, request):
         print("\n\n\n************************************",request.data,"\n\n\n\n**********************************")
         ghl_api_key = request.GET.get("ghl_api_key")
+        tag_type = request.GET.get("type")
         headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + ghl_api_key
@@ -46,6 +47,7 @@ class Webhook(APIView):
                     "lastName": request.data.get("contact").get("last_name"),
                     "address1": request.data.get("contact").get("address"),
                     "companyName": request.data.get("contact").get("company_name"),
+                    "tags":[tag_type],
                     "customField": cust_field
                     })
 
@@ -58,6 +60,8 @@ class Webhook(APIView):
 
         else:
             id = response.get("contacts")[0].get("id")
+            tags = response.get("contacts")[0].get("tags")
+            tags.append(tag_type)
             cust_field = {}
             cust_field[con_name.get("public_identifier")] = request.data.get("contact").get("public_identifier")
             cust_field[con_name.get("Message")] = request.data.get("messenger").get("message")
@@ -67,6 +71,7 @@ class Webhook(APIView):
                     "lastName": request.data.get("contact").get("last_name"),
                     "address1": request.data.get("contact").get("address"),
                     "companyName": request.data.get("contact").get("company_name"),
+                    "tags": tags,
                     "customField": cust_field
                     })
             print("\n\n PUT PPAYLOAD RESPONSE", payload)

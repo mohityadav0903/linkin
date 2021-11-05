@@ -16,7 +16,7 @@ class Webhook(APIView):
         con_name={}
         url = "https://rest.gohighlevel.com/v1/custom-fields/"
         response = requests.request("GET", url, headers=headers).json()
-        print("\n\n CUSTOM FIELD RESPONSE", response)
+        # print("\n\n CUSTOM FIELD RESPONSE", response)
         for cust_fields in response.get("customFields"):
         # print(cust_fields)
             con_name[cust_fields.get("name")] = cust_fields.get("id")

@@ -34,6 +34,7 @@ class Webhook(APIView):
             cust_field[con_name.get("company_name")] = request.get("contacts").get("company_name")
             cust_field[con_name.get("public_identifier")] = request.get("contacts").get("public_identifier")
             cust_field[con_name.get("message")] = request.get("messenger").get("message")
+            cust_field[con_name.get("profile_link")] = request.get("contacts").get("profile_link")
             payload = json.dumps({
                     "email": request.get("contacts").get("email"),
                     "phone": request.get("contacts").get("phone"),
@@ -53,6 +54,7 @@ class Webhook(APIView):
             cust_field[con_name.get("company_name")] = request.get("contacts").get("company_name")
             cust_field[con_name.get("public_identifier")] = request.get("contacts").get("public_identifier")
             cust_field[con_name.get("message")] = request.get("messenger").get("message")
+            cust_field[con_name.get("profile_link")] = request.get("contacts").get("profile_link")
             payload = json.dumps({
                     "firstName": request.get("contacts").get("first_name"),
                     "lastName": request.get("contacts").get("last_name"),

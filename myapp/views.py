@@ -105,13 +105,4 @@ class GHLWebhook(APIView):
             }
             url = "https://api.liaufa.com/api/v1/open-api/campaign-instance/"+str(camp_id)+"/assign/?key="+str(key) +"&secret=" +str(secret)
             final_response = requests.request("POST", url, headers=headers, data=payload).json()
-            print(url,final_response)
-        
-        url="https://api.liaufa.com/api/v1/campaign-contacts/?campaign_instance=132171&search=Manu%20Shrivastava"
-        headers = {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': 'isH8PrEkeuEzz7KzkGLiVzO7v4B2EJWdBq0uLTaIEKo81cQLFocdQf56aKUCe3zj'
-        }
-        final_response = requests.request("GET", url, headers=headers).json()
-        print(final_response)
         return Response(data="sucess")

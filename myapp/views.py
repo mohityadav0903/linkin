@@ -2,13 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 import json
-
+from rest_framework import serializers
 # Create your views here.
 class Webhook(APIView):
     def post(self, request):
         print("\n\n\n************************************",request.data,"\n\n\n\n**********************************")
         ghl_api_key = request.GET.get("ghl_api_key")
         tag_type = request.GET.get("type")
+        if ghl_api_key == None:
+            raise serializers.ValidationError("ghl_api_key is required.")
         headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + ghl_api_key
@@ -85,3 +87,31 @@ class Webhook(APIView):
         print("\n\n\n************************************",request.GET,"\n\n\n\n**********************************")
 
         return Response(data="Sucess")
+
+class GHLWebhook(APIView):
+    def post(self, request):
+        # print(request.data)
+        # print(request.GET)
+        key = request.GET.get("key")
+        # ghl_api_key = request.GET.get("ghl_api_key")
+        camp_id = request.GET.get("camp_id")
+        secret = request.GET.get("secret")
+        if request.GET.get("type") == "assign":
+            print("done")
+            payload = json.dumps({"profile_link": request.data.get("profile_link"),	"first_name": "Manu Shrivastava",	"company_name": "Company name"})
+            print(payload)
+            headers = {
+            'Content-Type': 'application/json',
+            }
+            url = "https://api.liaufa.com/api/v1/open-api/campaign-instance/"+str(camp_id)+"/assign/?key="+str(key) +"&secret=" +str(secret)
+            final_response = requests.request("POST", url, headers=headers, data=payload).json()
+            print(url,final_response)
+        
+        url="https://api.liaufa.com/api/v1/campaign-contacts/?campaign_instance=132171&search=Manu%20Shrivastava"
+        headers = {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': 'isH8PrEkeuEzz7KzkGLiVzO7v4B2EJWdBq0uLTaIEKo81cQLFocdQf56aKUCe3zj'
+        }
+        final_response = requests.request("GET", url, headers=headers).json()
+        print(final_response)
+        return Response(data="sucess")

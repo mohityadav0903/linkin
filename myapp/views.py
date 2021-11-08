@@ -98,7 +98,7 @@ class GHLWebhook(APIView):
         secret = request.GET.get("secret")
         if request.GET.get("type") == "assign":
             print("done")
-            payload = json.dumps({"profile_link": request.data.get("profile_link"),	"first_name": "Manu Shrivastava",	"company_name": "Company name"})
+            payload = json.dumps({"profile_link": request.data.get("profile_link")})
             print(payload)
             headers = {
             'Content-Type': 'application/json',

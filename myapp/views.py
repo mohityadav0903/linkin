@@ -10,7 +10,7 @@ class Webhook(APIView):
         ghl_api_key = request.GET.get("twilead_api_key")
         tag_type = request.GET.get("type")
         if ghl_api_key == None:
-            raise serializers.ValidationError("ghl_api_key is required.")
+            raise serializers.ValidationError("twilead_api_key is required.")
         headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + ghl_api_key
@@ -105,4 +105,5 @@ class GHLWebhook(APIView):
             }
             url = "https://api.liaufa.com/api/v1/open-api/campaign-instance/"+str(camp_id)+"/assign/?key="+str(key) +"&secret=" +str(secret)
             final_response = requests.request("POST", url, headers=headers, data=payload).json()
+            print("response",final_response)
         return Response(data="sucess")

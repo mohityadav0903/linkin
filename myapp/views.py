@@ -7,7 +7,7 @@ from rest_framework import serializers
 class Webhook(APIView):
     def post(self, request):
         print("\n\n\n************************************",request.data,"\n\n\n\n**********************************")
-        ghl_api_key = request.GET.get("ghl_api_key")
+        ghl_api_key = request.GET.get("twilead_api_key")
         tag_type = request.GET.get("type")
         if ghl_api_key == None:
             raise serializers.ValidationError("ghl_api_key is required.")

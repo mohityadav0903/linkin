@@ -8,7 +8,8 @@ class Webhook(APIView):
     def post(self, request):
         print("\n\n\n************************************",request.data,"\n\n\n\n**********************************")
         ghl_api_key = request.GET.get("twilead_api_key")
-        tag_type = request.GET.get("type")
+        tag_type = request.GET.getlist("type")
+        print(tag_type)
         if ghl_api_key == None:
             raise serializers.ValidationError("twilead_api_key is required.")
         headers = {
@@ -49,7 +50,7 @@ class Webhook(APIView):
                     "lastName": request.data.get("contact").get("last_name"),
                     "address1": request.data.get("contact").get("address"),
                     "companyName": request.data.get("contact").get("company_name"),
-                    "tags":[tag_type],
+                    "tags":tag_type,
                     "customField": cust_field
                     })
 
@@ -63,7 +64,8 @@ class Webhook(APIView):
         else:
             id = response.get("contacts")[0].get("id")
             tags = response.get("contacts")[0].get("tags")
-            tags.append(tag_type)
+            tag_var=tags + tag_type
+            print(tags,tag_var)
             cust_field = {}
             cust_field[con_name.get("public_identifier")] = request.data.get("contact").get("public_identifier")
             cust_field[con_name.get("Message")] = request.data.get("messenger").get("message")
@@ -73,7 +75,7 @@ class Webhook(APIView):
                     "lastName": request.data.get("contact").get("last_name"),
                     "address1": request.data.get("contact").get("address"),
                     "companyName": request.data.get("contact").get("company_name"),
-                    "tags": tags,
+                    "tags": tag_var,
                     "customField": cust_field
                     })
             print("\n\n PUT PPAYLOAD RESPONSE", payload)
@@ -96,6 +98,7 @@ class GHLWebhook(APIView):
         # ghl_api_key = request.GET.get("ghl_api_key")
         camp_id = request.GET.get("camp_id")
         secret = request.GET.get("secret")
+
         if request.GET.get("type") == "assign":
             print("done")
             payload = json.dumps({"profile_link": request.data.get("profile_link")})

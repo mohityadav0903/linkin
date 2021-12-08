@@ -146,6 +146,7 @@ class MsgWebhook(APIView):
         data = json.dumps({"body":str(msg),"messenger":messenger_id,"image_template":None})
         print(data)
         resp = requests.request("POST", "https://api.liaufa.com/api/v1/linkedin/messenger/messages/",headers=headers, data=data).json()
+        print(resp)
         return Response(data=resp)
 
 

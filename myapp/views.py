@@ -114,7 +114,7 @@ class GHLWebhook(APIView):
 
 class MsgWebhook(APIView):
     def post(self, request):
-
+        print(request.data)
         msg = request.data.get("Message")
         profile_url = request.data.get("Linkedin Url")
         print(msg,profile_url)
@@ -127,7 +127,6 @@ class MsgWebhook(APIView):
               "password": "er1919rce"
             })
         resp = requests.request("POST", "https://api.liaufa.com/api/v1/token/",headers=headers, data=data).json()
-        print(resp)
         headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + resp.get("access")
@@ -135,7 +134,6 @@ class MsgWebhook(APIView):
 
 
         resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/accounts/?page_size=100",headers=headers).json()
-        print(resp)
         for data in resp.get("results"):
             if data.get("name") == "Pierre-Ange CHEMARIN":
                 li_id = data.get("id")

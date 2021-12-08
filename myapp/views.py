@@ -1,3 +1,4 @@
+from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
@@ -110,3 +111,42 @@ class GHLWebhook(APIView):
             final_response = requests.request("POST", url, headers=headers, data=payload).json()
             print("response",final_response)
         return Response(data="sucess")
+
+class MsgWebhook(APIView):
+    def post(self, request):
+
+        msg = request.data.get("Message")
+        profile_url = request.data.get("Likedin Url")
+        print(msg,profile_url)
+        headers = {
+        'Content-Type': 'application/json',
+        'Origin':'https://app.leadin.tech'
+        }
+        data =json.dumps({
+              "username": "clement@leadin.fr",
+              "password": "er1919rce"
+            })
+        resp = requests.request("POST", "https://api.liaufa.com/api/v1/token/",headers=headers, data=data).json()
+        print(resp)
+        headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + resp.get("access")
+        }
+
+
+        resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/accounts/?page_size=100",headers=headers).json()
+        for data in resp.get("results"):
+            if data.get("name") == "Pierre-Ange CHEMARIN":
+                li_id = data.get("id")
+                break
+        print(li_id)
+        resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/messenger/?search=" +  str(profile_url) + "&li_account_id=" + str(li_id) + "&ordering=-last_datetime",headers=headers).json()
+        
+        messenger_id = resp.get("results")[0].get("id")
+        data = json.dumps({"body":str(msg),"messenger":messenger_id,"image_template":None})
+        print(data)
+        resp = requests.request("POST", "https://api.liaufa.com/api/v1/linkedin/messenger/messages/",headers=headers, data=data).json()
+        return Response(data=resp)
+
+
+

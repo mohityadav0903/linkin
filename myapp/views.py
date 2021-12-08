@@ -116,7 +116,7 @@ class MsgWebhook(APIView):
     def post(self, request):
 
         msg = request.data.get("Message")
-        profile_url = request.data.get("Likedin Url")
+        profile_url = request.data.get("Linkedin Url")
         print(msg,profile_url)
         headers = {
         'Content-Type': 'application/json',

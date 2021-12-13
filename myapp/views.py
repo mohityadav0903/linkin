@@ -71,6 +71,8 @@ class Webhook(APIView):
             cust_field[con_name.get("public_identifier")] = request.data.get("contact").get("public_identifier")
             cust_field[con_name.get("Message")] = request.data.get("messenger").get("message")
             cust_field[con_name.get("profile_link")] = request.data.get("contact").get("profile_link")
+            cust_field[con_name.get("LI Account")] = request.data.get("hook").get("li_account")
+            print("Custom Fields", cust_field)
             payload = json.dumps({
                     "firstName": request.data.get("contact").get("first_name"),
                     "lastName": request.data.get("contact").get("last_name"),

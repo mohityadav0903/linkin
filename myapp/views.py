@@ -119,7 +119,7 @@ class MsgWebhook(APIView):
         print(request.data)
         msg = request.data.get("Message")
         profile_url = request.data.get("profile_link")
-        li_acc = request.data.get("li_account")
+        li_acc = request.data.get("LI Account")
         print(msg,profile_url)
         headers = {
         'Content-Type': 'application/json',
@@ -142,6 +142,8 @@ class MsgWebhook(APIView):
         #         li_id = data.get("id")
         #         break
         # print(li_id)
+        url ="https://api.liaufa.com/api/v1/linkedin/messenger/?search=" +  str(profile_url) + "&li_account_id=" + str(li_acc) + "&ordering=-last_datetime"
+        print(url)
         resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/messenger/?search=" +  str(profile_url) + "&li_account_id=" + str(li_acc) + "&ordering=-last_datetime",headers=headers).json()
         print(resp)
         messenger_id = resp.get("results")[0].get("id")

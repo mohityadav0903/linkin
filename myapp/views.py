@@ -44,6 +44,7 @@ class Webhook(APIView):
             cust_field[con_name.get("public_identifier")] = request.data.get("contact").get("public_identifier")
             cust_field[con_name.get("Message")] = request.data.get("messenger").get("message")
             cust_field[con_name.get("profile_link")] = request.data.get("contact").get("profile_link")
+            cust_field[con_name.get("LI Account")] = request.data.get("hook").get("li_account")
             payload = json.dumps({
                     "email": request.data.get("contact").get("email"),
                     "phone": request.data.get("contact").get("phone"),
@@ -117,6 +118,7 @@ class MsgWebhook(APIView):
         print(request.data)
         msg = request.data.get("Message")
         profile_url = request.data.get("LinkedIn Url")
+        li_acc = request.data.get("LI Account")
         print(msg,profile_url)
         headers = {
         'Content-Type': 'application/json',
@@ -133,13 +135,13 @@ class MsgWebhook(APIView):
         }
 
 
-        resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/accounts/?page_size=100",headers=headers).json()
-        for data in resp.get("results"):
-            if data.get("name") == "Pierre-Ange CHEMARIN":
-                li_id = data.get("id")
-                break
-        print(li_id)
-        resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/messenger/?search=" +  str(profile_url) + "&li_account_id=" + str(li_id) + "&ordering=-last_datetime",headers=headers).json()
+        # resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/accounts/?page_size=100",headers=headers).json()
+        # for data in resp.get("results"):
+        #     if data.get("name") == "Pierre-Ange CHEMARIN":
+        #         li_id = data.get("id")
+        #         break
+        # print(li_id)
+        resp = requests.request("GET", "https://api.liaufa.com/api/v1/linkedin/messenger/?search=" +  str(profile_url) + "&li_account_id=" + str(li_acc) + "&ordering=-last_datetime",headers=headers).json()
         print(resp)
         messenger_id = resp.get("results")[0].get("id")
         data = json.dumps({"body":str(msg),"messenger":messenger_id,"image_template":None})

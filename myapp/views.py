@@ -118,7 +118,7 @@ class MsgWebhook(APIView):
     def post(self, request):
         print(request.data)
         msg = request.data.get("Message")
-        profile_url = request.data.get("LinkedIn Url")
+        profile_url = request.data.get("profile_link")
         li_acc = request.data.get("li_account")
         print(msg,profile_url)
         headers = {

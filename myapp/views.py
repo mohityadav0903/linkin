@@ -119,7 +119,7 @@ class MsgWebhook(APIView):
         print(request.data)
         msg = request.data.get("Message")
         profile_url = request.data.get("LinkedIn Url")
-        li_acc = request.data.get("LI Account")
+        li_acc = request.data.get("li_account")
         print(msg,profile_url)
         headers = {
         'Content-Type': 'application/json',

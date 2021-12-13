@@ -7,7 +7,6 @@ from rest_framework import serializers
 # Create your views here.
 class Webhook(APIView):
     def post(self, request):
-        print("\n\n\n************************************",request.data,"\n\n\n\n**********************************")
         ghl_api_key = request.GET.get("twilead_api_key")
         tag_type = request.GET.getlist("type")
         print(tag_type)
@@ -32,19 +31,19 @@ class Webhook(APIView):
         
         url = "https://rest.gohighlevel.com/v1/contacts/lookup?email=" + str(email)
         response = requests.request("GET", url, headers=headers).json()
-        print("\n\n EMAIL LOOKUP RESPONSE", response)
 
         if response.get("contacts") == None :
             url = "https://rest.gohighlevel.com/v1/contacts/lookup?phone=" + str(phone)
             response = requests.request("GET", url, headers=headers).json()
             print("\n\n PHONE LOOKUP RESPONSE", response)
-
+        print(con_name.get("LI Account"))
         if response.get("contacts") == None :
             cust_field = {}
             cust_field[con_name.get("public_identifier")] = request.data.get("contact").get("public_identifier")
             cust_field[con_name.get("Message")] = request.data.get("messenger").get("message")
             cust_field[con_name.get("profile_link")] = request.data.get("contact").get("profile_link")
             cust_field[con_name.get("LI Account")] = request.data.get("hook").get("li_account")
+            print("Custom Fields", cust_field)
             payload = json.dumps({
                     "email": request.data.get("contact").get("email"),
                     "phone": request.data.get("contact").get("phone"),

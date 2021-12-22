@@ -116,11 +116,10 @@ class GHLWebhook(APIView):
 
 class MsgWebhook(APIView):
     def post(self, request):
-        print(request.data)
         msg = request.data.get("Message")
         profile_url = request.data.get("profile_link")
         li_acc = request.data.get("LI Account")
-        print(msg,profile_url)
+        print(msg,profile_url,li_acc)
         headers = {
         'Content-Type': 'application/json',
         'Origin':'https://app.leadin.tech'

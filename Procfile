@@ -1,1 +1,1 @@
-web: gunicorn linkin.wsgi:application
+web: gunicorn linkin.wsgi:application --timeout 150

@@ -4,6 +4,8 @@ from rest_framework.response import Response
 import requests
 import json
 from rest_framework import serializers
+from django.shortcuts import render
+
 # Create your views here.
 class Webhook(APIView):
     def post(self, request):
@@ -152,5 +154,21 @@ class MsgWebhook(APIView):
         print(resp)
         return Response(data=resp)
 
+
+
+class UI(APIView):
+    def get(self, request):
+        ghl_api_key = request.GET.get("ghl_api_key")
+        if ghl_api_key == None:
+            return Response(data="Required** API key in params")
+        headers = {
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + ghl_api_key
+           }
+
+        url = "https://rest.gohighlevel.com/v1/contacts/"
+        data = requests.request("GET", url=url, headers=headers).json()
+        return render(request, 'home.html', {'data': data.get("contacts")})
+        return Response(data=data.get("contacts"))
 
 

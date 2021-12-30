@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "urf-8" name = "viewport" content = "width=device-width, initial-scale=1"/>
+        {% load static %}
+        <link rel = "stylesheet" type = "text/css" href = "{% static 'css/bootstrap.css' %}"/>
+        <link rel = "stylesheet" type = "text/css" href = "{% static 'css/datatable.min.css' %}"/>
+        <style>
+            #friendsoptionstable {
+                table-layout: fixed;
+                word-wrap: break-word;
+                }
+                .loader {
+position: absolute;
+left: 50%;
+top: 50%;
+width: 100px;
+height: 100px;
+display:none;
+z-index: 9999;
+background: url('https://cdn-images-1.medium.com/max/100/1*LLmBc9MiJZthEmPRBc11hQ.gif') no-repeat;    
+}
+        </style>
+    </head>
+<body>
+    <!-- <button type="button" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#myModal">
+        Open modal
+      </button> -->
+    <div class = "col-md-3"></div>
+    <div class = "col-md-6 container-fluid">
+        <h3 class = "text-primary">Contacts to send the message.</h3>
+        <hr style = "border-top:1px dotted #000;"/>
+        <table id = "table" class = "table table-bordered">
+            <thead class = "alert-success">
+                <tr>
+                    <th>S.No</th>
+                    <th>Account Name</th>
+                    <th>Email</th>
+                    <th>Contact Id</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for details in data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ details.firstName }}</td>
+                    {% if details.email %}
+                    <td>{{ details.email }}</td>
+                    <td>{{ details.id }}</td>
+                    <td>
+                        <button type="button" id={{forloop.counter0}} data-account-name="{{details.firstName}}"
+                        class="btn btn-primary phone-no-details" 
+                        >Send Message</button>
+                    </td>
+                    {% else %}
+                    <td>No Phone number present for this account</td>
+                    <td>No action to perform</td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                    No Data
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    </div>
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+      
+
+        </div>
+    </div>
+</div>
+<div id="loader" class="loader" style="display:none;"></div>
+
+ 
+</body>
+<script src = "{% static 'jquery/jquery.min.js' %}"></script>
+<script src = "{% static 'jquery/bootstrap.min.js' %}"></script>
+<script src = "{% static 'jquery/datatables.min.js' %}"></script>
+<script src="{% static 'jquery/sweetalert.min.js' %}"></script>
+<script type = "text/javascript">
+    $(document).ready(function(){
+        $('#table').DataTable();
+    });
+
+    $('#myModal').on('hidden.bs.modal', function () {
+        $("#phone_number_details").empty();
+        $(".phone-no-details").attr("disabled", false)
+   });
+    $(".phone-no-details").on('click',function() {
+        $(this).attr("disabled", true)
+        $('.loader').show();
+        var acc_name = $(this).attr("data-account-name");
+        $.ajax({
+            type: 'GET',
+            url: window.location.href,
+            data: {"id": this.id},
+            success:function(response){
+                $('.loader').hide();
+                response.map((item,i)=>{
+                    let temp = ` <tr>
+                                    <td>${item.phone_number}</td>
+                                    <td>${item.sid}</td>
+                                    <td>"Voice":${item.capabilities.voice},"SMS":${item.capabilities.sms},"MMS":${item.capabilities.mms}</td>
+                                    <td>${item.created_at}</td>
+                                    <td>${item.updated_at}</td>
+                                    <td>${item.emergency_status}</td>
+                                    <td>${item.status}</td>
+                                    </tr> `
+                    $('#phone_number_details').append(temp) 
+                })
+                $("#account-name").html(`Phone Number details for Account ${acc_name}`)
+                $("#myModal").modal('show')
+
+
+            },
+            error:function(response){
+                $('.loader').hide();
+                var error_message = response.responseJSON.message
+                alert(`${error_message}`)
+                $(".phone-no-details").attr("disabled", false)
+            }
+        })
+    });
+</script>
+
+</html>
